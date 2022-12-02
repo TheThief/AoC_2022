@@ -26,6 +26,25 @@ struct line
 	bool operator ==(const line<T>&) const = default;
 };
 
+template<>
+struct line<std::string>
+{
+	std::string data;
+
+	friend std::istream& operator>>(std::istream& is, line& l)
+	{
+		std::getline(is, l.data);
+
+		return is;
+	}
+
+	operator std::string& ()& { return data; }
+	operator std::string && ()&& { return std::move(data); }
+	operator std::string const& () const { return data; }
+
+	bool operator ==(const line<std::string>&) const = default;
+};
+
 template<typename T>
 struct line<std::vector<T>>
 {

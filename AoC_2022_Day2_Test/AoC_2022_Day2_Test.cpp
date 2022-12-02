@@ -2,27 +2,16 @@
 
 #include <sstream>
 #include <string_view>
-#include "../AoC_2022_Day1/AoC_2022_Day1.h"
+#include "../AoC_2022_Day2/AoC_2022_Day2.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace aoc2022::day1::test
+namespace aoc2022::day2::test
 {
 	const std::string test_input =
-R"(1000
-2000
-3000
-
-4000
-
-5000
-6000
-
-7000
-8000
-9000
-
-10000)";
+R"(A Y
+B X
+C Z)";
 
 	TEST_CLASS(Test)
 	{
@@ -36,13 +25,13 @@ R"(1000
 
 		TEST_METHOD(Part1)
 		{
-			const int64_t expected_test_ouput_1 = 24000;
+			const int64_t expected_test_ouput_1 = 15;
 			Assert::AreEqual(expected_test_ouput_1, part1(input));
 		}
 
 		TEST_METHOD(Part2)
 		{
-			const int64_t expected_test_ouput_2 = 45000;
+			const int64_t expected_test_ouput_2 = 12;
 			Assert::AreEqual(expected_test_ouput_2, part2(input));
 		}
 	};
