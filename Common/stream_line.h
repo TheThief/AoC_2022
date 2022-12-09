@@ -64,6 +64,12 @@ struct line<std::vector<T>>
 	operator std::vector<T>&&      ()&&     { return std::move(data); }
 	operator std::vector<T> const& () const { return data; }
 
+	// casting operators
+	template<typename U>
+	operator std::vector<U>() const& { return std::vector<U>(std::from_range, data); }
+	template<typename U>
+	operator std::vector<U>() &&     { return std::vector<U>(std::from_range, std::move(data)); }
+
 	bool operator ==(const line<std::vector<T>>&) const = default;
 };
 
