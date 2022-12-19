@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 
@@ -62,7 +64,7 @@ struct delimitered_container
 {
 	T value;
 
-	operator const T& () const { return value; }
+	operator const T& () const& { return value; }
 	operator T&& () && { return std::move(value); }
 	operator remove_delimitered<T>::type() const& requires !std::same_as<T, remove_delimitered<T>::type> { return value; }
 	operator remove_delimitered<T>::type() && requires !std::same_as<T, remove_delimitered<T>::type> { return std::move(value); }
@@ -76,5 +78,33 @@ std::istream& operator>>(std::istream& in, delimitered_container<std::pair<T,U>,
 	return in;
 }
 
+template<typename T, char sep, typename Alloc = std::allocator<T>>
+std::istream& operator>>(std::istream& is, delimitered_container<std::vector<T, Alloc>, sep>& t)
+{
+	while(1)
+	{
+		T value;
+		if (!(is >> value))   //if we failed to read the value
+		{
+			return is;          //return failure state (stream may not be in a consistent state, can't rewind)
+		}
+		t.value.push_back(std::move(value));
+		if (is.peek() == sep) //if next character matches the separator
+		{
+			is.ignore();        //extract it from the stream and loop round
+			continue;
+		}
+		else                  //if the next character is anything else
+		{
+			is.clear();         //clear the EOF state, read was successful
+			break;
+		}
+	}
+	return is;
+}
+
 template<typename T, typename U, char sep=','>
 using delimitered_pair = delimitered_container<std::pair<T, U>, sep>;
+
+template<typename T, char sep = ',', typename Alloc=std::allocator<T>>
+using delimitered_vector = delimitered_container<std::vector<T, Alloc>, sep>;
