@@ -5,6 +5,7 @@
 #include <range/v3/all.hpp>
 #include "delimitered.h"
 #include "stream_line.h"
+#include "ranges_utils.h"
 
 namespace aoc2022::day6
 {
@@ -22,14 +23,11 @@ namespace aoc2022::day6
 
 	int part1(const puzzle_input& input)
 	{
-		// there's no index_of, and find_if returns ranges::dangling when fed a range pipeline (even enumerate), so I need to store a temporary range to be able to subtract begin(). Awful.
-		auto temp = input.datastream | ranges::views::sliding(4);
-		return ranges::find_if(temp, [](auto&& i) { return (i | ranges::to<std::unordered_set>).size() == 4; }) - temp.begin() + 4;
+		return index_of_if(input.datastream | ranges::views::sliding(4), [](auto&& i) { return (i | ranges::to<std::unordered_set>).size() == 4; }) + 4;
 	}
 
 	int part2(const puzzle_input& input)
 	{
-		auto temp = input.datastream | ranges::views::sliding(14) | ranges::to<std::vector>;
-		return ranges::find_if(temp, [](auto&& i) { return (i | ranges::to<std::unordered_set>).size() == 14; }) - temp.begin() + 14;
+		return index_of_if(input.datastream | ranges::views::sliding(14), [](auto&& i) { return (i | ranges::to<std::unordered_set>).size() == 14; }) + 14;
 	}
 }
